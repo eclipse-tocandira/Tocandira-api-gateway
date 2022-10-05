@@ -1,0 +1,21 @@
+
+_format_version: "1.1"
+
+services:
+  - name: myservice_1
+    url: http://myservice_1:9090
+  - name: myservice_2
+    url: http://myservice_2:3000
+
+routes:
+  - name: myservice_2
+    service: myservice_2
+    paths:
+    - /
+  - name: myservice_1
+    service: myservice_1
+    paths:
+    - /myservice_1
+
+plugins:
+  - name: bot-detection

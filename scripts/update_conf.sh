@@ -9,8 +9,8 @@ if [ -z "${NGINX_HTTP_PORT}" ]; then
 fi
 
 # Update .conf files that do not accept enviroment variables
-mv /home/kong/nginx.conf.template /etc/kong/nginx.conf
+cp -f /home/kong/nginx.conf.template /etc/kong/nginx.conf
 sed -i 's@NGINX_REDIRECT_PORT@'"$NGINX_HTTP_PORT"'@g' /etc/kong/nginx.conf
 
-mv /home/kong/kong.conf.template /etc/kong/kong.conf
+cp -f /home/kong/kong.conf.template /etc/kong/kong.conf
 sed -i 's@CERTIFICATES_FOLDER@'"$KONG_CERTIFICATES"'@g' /etc/kong/kong.conf

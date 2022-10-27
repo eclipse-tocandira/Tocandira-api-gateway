@@ -16,6 +16,10 @@ if [ -z "${KONG_IP}" ]; then
     echo "ERROR: Could not find the variable 'KONG_IP'. Please set it as the server IP."
     exit 127
 fi
+if [ -z "${KONG_DNS}" ]; then
+    echo "ERROR: Could not find the variable 'KONG_IP'. Please set it as the server IP."
+    exit 127
+fi
 
 # Check for certification files
 if [[ -f $KONG_CERTIFICATES/ca-cert.pem && -f $KONG_CERTIFICATES/server-cert.pem && -f $KONG_CERTIFICATES/server-key.pem ]]; then
@@ -39,7 +43,7 @@ else
     # Write certificate ownership 
     subject_string=/C=$certificate_subject_country/ST=$certificate_subject_country/L=$certificate_subject_location/CN=$certificate_subject_company/emailAddress=$certificate_subject_email
     
-    echo "subjectAltName=DNS:$KONG_IP,DNS:$KONG_IP,IP:$KONG_IP" >$KONG_CERTIFICATES/server-ext.cnf
+    echo "subjectAltName=DNS:$KONG_DNS,DNS:$KONG_IP,IP:$KONG_IP" >$KONG_CERTIFICATES/server-ext.cnf
 
     # 1. Generate CA's private key and self-signed certificate
     openssl req -x509 -newkey rsa:4096 \

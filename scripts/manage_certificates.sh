@@ -17,8 +17,7 @@ if [ -z "${KONG_IP}" ]; then
     exit 127
 fi
 if [ -z "${KONG_DNS}" ]; then
-    echo "ERROR: Could not find the variable 'KONG_IP'. Please set it as the server IP."
-    exit 127
+    KONG_DNS=$KONG_IP
 fi
 
 # Check for certification files

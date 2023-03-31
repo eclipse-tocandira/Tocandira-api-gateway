@@ -1,7 +1,0 @@
-# redirect all http traffic to https
-server {
-    listen NGINX_REDIRECT_PORT;
-    listen [::]:NGINX_REDIRECT_PORT;
-    server_name default_server;
-    return 301 https://$host$request_uri;
-}

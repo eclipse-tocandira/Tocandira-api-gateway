@@ -44,23 +44,29 @@ else
     
     echo "subjectAltName=DNS:$KONG_DNS,DNS:$KONG_IP,IP:$KONG_IP" >$KONG_CERTIFICATES/server-ext.cnf
 
-    # 1. Generate CA's private key and self-signed certificate
+    # Generate CA's private key and self-signed certificate
     openssl req -x509 -newkey rsa:4096 \
         -days $certificate_expiration_days -nodes \
         -keyout $KONG_CERTIFICATES/ca-key.pem \
         -out $KONG_CERTIFICATES/ca-cert.pem \
         -subj "$subject_string"
+    
+    # Convert to Windows type certificate
+    openssl x509 -inform PEM \
+        -in $KONG_CERTIFICATES/ca-cert.pem \
+        -outform DER \
+        -out $KONG_CERTIFICATES/ca-cert.cer
 
     # Client signed certification
     openssl x509 -in $KONG_CERTIFICATES/ca-cert.pem -noout -text
 
-    # 2. Generate web server's private key and certificate signing request (CSR)
+    # Generate web server's private key and certificate signing request (CSR)
     openssl req -newkey rsa:4096 \
         -nodes -keyout $KONG_CERTIFICATES/server-key.pem \
         -out $KONG_CERTIFICATES/server-req.pem \
         -subj "$subject_string"
 
-    # 3. Use CA's private key to sign web server's CSR and get back the signed certificate
+    # Use CA's private key to sign web server's CSR and get back the signed certificate
     openssl x509 -req -in $KONG_CERTIFICATES/server-req.pem \
         -days $certificate_expiration_days \
         -CA $KONG_CERTIFICATES/ca-cert.pem \

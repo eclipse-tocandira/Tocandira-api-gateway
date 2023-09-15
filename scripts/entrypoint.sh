@@ -2,6 +2,12 @@
 # Copyright (c) 2017 Aimirim STI.
 set -e
 
+Pid=0
+trap stop SIGTERM SIGINT SIGQUIT SIGHUP
+stop() {
+    kill $PID
+}
+
 # Call certificate manager
 source /home/kong/manage_certificates.sh
 
@@ -15,4 +21,6 @@ if [ ! -f "/etc/kong/kong.yml" ]; then
 fi
 
 # Start Kong
-kong start -c /etc/kong/kong.conf
+kong start -c /etc/kong/kong.conf &
+Pid=$!
+wait "$Pid"
